@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Django
+db.sqlite3
+*.log
+
+# Django migrations
+**/migrations/__pycache__/
+
+# PyCharm
+.idea/
+
+# Environment variables
+*.env
+
+# OS files
+.DS_Store
+Thumbs.db
