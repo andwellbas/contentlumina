@@ -2,7 +2,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
+from .serializers import GeneratedContentSerializer
+from .models import Prompt, GeneratedContent
+from .services.openai_service import generate_text
+
+
+
 
 
 class RegisterView(APIView):
@@ -31,3 +37,28 @@ class RegisterView(APIView):
         user.save()
 
         return Response({'message': 'User registered successfully!'}, status=status.HTTP_201_CREATED)
+
+
+class GenerateContentView(APIView):
+    """
+    View for generate content by OpenAI.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        prompt_text = request.data.get('text')
+
+        if not prompt_text:
+            return Response({'error': 'Prompt text is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Generate request by OpenAI
+        ai_response = generate_text(prompt_text)
+
+        # Create Prompt and GeneratedContent in db
+        prompt = Prompt.objects.create(user=user, text=prompt_text)
+        generated_content = GeneratedContent.objects.create(prompt=prompt, ai_response=ai_response)
+
+        serializer = GeneratedContentSerializer(generated_content)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
