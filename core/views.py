@@ -6,9 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import GeneratedContentSerializer
 from .models import Prompt, GeneratedContent
 from .services.openai_service import generate_text
-
-
-
+from django.utils import timezone
 
 
 class RegisterView(APIView):
@@ -52,7 +50,24 @@ class GenerateContentView(APIView):
         if not prompt_text:
             return Response({'error': 'Prompt text is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Generate request by OpenAI
+        # Maximum users generations per one day
+        max_generations_per_day = 5
+
+        # Check if user not staff or superuser
+        if not (user.is_staff or user.is_superuser):
+            today = timezone.now().date()
+            generation_count = GeneratedContent.objects.filter(
+                prompt__user=user,
+                created_at__date=today
+            ).count()
+
+            if generation_count >= max_generations_per_day:
+                return Response(
+                    {"error": "Daily generation limit reached. Try again tomorrow."},
+                    status=status.HTTP_429_TOO_MANY_REQUESTS
+                )
+
+        # Generate response by OpenAI
         ai_response = generate_text(prompt_text)
 
         # Create Prompt and GeneratedContent in db
