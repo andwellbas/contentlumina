@@ -8,6 +8,10 @@ from .models import Prompt, GeneratedContent
 from .services.openai_service import generate_text
 from django.utils import timezone
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+
 
 class RegisterView(APIView):
     """
@@ -77,3 +81,80 @@ class GenerateContentView(APIView):
         serializer = GeneratedContentSerializer(generated_content)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+def register_page(request):
+    """
+    View for register new user.
+
+    If method POST:
+    Get username, email and password from forms.
+    If username and password and username unique then Create a new User.
+    After register redirect on login page.
+
+    If method GET:
+    Show register form.
+    """
+    if request.method == "POST":
+        # Get data from form
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        if username and password:
+            # Check unique username
+            if not User.objects.filter(username=username).exists():
+                # Create new user
+                User.objects.create_user(username=username, email=email, password=password)
+                return redirect('login-page')
+
+    return render(request, 'core/register.html')
+
+
+def login_page(request):
+    """
+    View for user login by form.
+
+    If method POST:
+    Get username and password.
+    Checks if the user exists and the password is correct.
+    If yes, login and redirect on generation page.
+
+    If method GET:
+    Show login form.
+    """
+    if request.method == "POST":
+        # Get data from form
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        # Authenticate user
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('generate-page')
+
+    return render(request, 'core/login.html')
+
+
+@login_required
+def generate_page(request):
+    """
+    View for generate content by OpenAI on Front.
+    Generate text, save prompt and response in db.
+    """
+    ai_response = None
+
+    if request.method == "POST":
+        prompt_text = request.POST.get("text")
+        if prompt_text:
+            # Generate response by OpenAI
+            ai_response = generate_text(prompt_text)
+
+            # Save prompt in db
+            prompt = Prompt.objects.create(user=request.user, text=prompt_text)
+
+            # Save response AI in db
+            GeneratedContent.objects.create(prompt=prompt, ai_response=ai_response)
+
+    return render(request, 'core/generate.html', {"ai_response": ai_response})

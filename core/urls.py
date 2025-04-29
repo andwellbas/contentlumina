@@ -1,11 +1,10 @@
 from django.urls import path
-from .views import RegisterView, GenerateContentView
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from . import views
 
 
 urlpatterns = [
-    path("register/", RegisterView.as_view(), name="register"), # Registration
-    path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"), # Login and get token
-    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"), # Refresh access token
-    path('generate/', GenerateContentView.as_view(), name='generate-content'), # Generate ai content
+    # Front
+    path('register/', views.register_page, name='register-page'), # Register
+    path('login/', views.login_page, name='login-page'), # Login
+    path('generate/', views.generate_page, name='generate-page'), # Generate
 ]

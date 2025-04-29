@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+
+{% block title %}Generate Content{% endblock %}
+
+
+{% block body %}
+    <h1>Generate Content</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="text" placeholder="Enter your prompt here..." required></textarea><br>
+        <button type="submit">Generate</button>
+    </form>
+
+    {% if ai_response %}
+        <h2>AI Response:</h2>
+        <p>{{ ai_response }}</p>
+    {% endif %}
+{% endblock %}
