@@ -158,3 +158,18 @@ def generate_page(request):
             GeneratedContent.objects.create(prompt=prompt, ai_response=ai_response)
 
     return render(request, 'core/generate.html', {"ai_response": ai_response})
+
+
+def home_page(request):
+    """
+    Simple home page.
+    """
+    return render(request, 'core/home.html')
+
+
+def movie_recommender(request):
+    """
+    Page for ger recommended movies.
+    (now just template)
+    """
+    return render(request, 'core/movie_recommender.html')
