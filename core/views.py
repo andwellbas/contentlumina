@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from .serializers import GeneratedContentSerializer
 from .models import Prompt, GeneratedContent
-from .services.openai_service import generate_text
+from .services.openai_service import generate_text, generate_movie_recommendations
 from django.utils import timezone
 
 from django.shortcuts import render, redirect
@@ -38,7 +38,7 @@ class RegisterView(APIView):
         user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
 
-        return Response({'message': 'User registered successfully!'}, status=status.HTTP_201_CREATED)
+        return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
 
 
 class GenerateContentView(APIView):
@@ -49,10 +49,10 @@ class GenerateContentView(APIView):
 
     def post(self, request):
         user = request.user
-        prompt_text = request.data.get('text')
+        prompt_text = request.data.get("text")
 
         if not prompt_text:
-            return Response({'error': 'Prompt text is required.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Prompt text is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Maximum users generations per one day
         max_generations_per_day = 5
@@ -106,9 +106,9 @@ def register_page(request):
             if not User.objects.filter(username=username).exists():
                 # Create new user
                 User.objects.create_user(username=username, email=email, password=password)
-                return redirect('login-page')
+                return redirect("login-page")
 
-    return render(request, 'core/register.html')
+    return render(request, "core/register.html")
 
 
 def login_page(request):
@@ -132,9 +132,9 @@ def login_page(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('generate-page')
+            return redirect("generate-page")
 
-    return render(request, 'core/login.html')
+    return render(request, "core/login.html")
 
 
 @login_required
@@ -157,19 +157,62 @@ def generate_page(request):
             # Save response AI in db
             GeneratedContent.objects.create(prompt=prompt, ai_response=ai_response)
 
-    return render(request, 'core/generate.html', {"ai_response": ai_response})
+    return render(request, "core/generate.html", {"ai_response": ai_response})
 
 
 def home_page(request):
     """
     Simple home page.
     """
-    return render(request, 'core/home.html')
+    return render(request, "core/home.html")
 
 
 def movie_recommender(request):
     """
-    Page for ger recommended movies.
-    (now just template)
+    View for generating movie recommendations via OpenAI.
+    Gets data from the form, builds a prompt, calls generate_movie_recommendations(),
+    returns a response to the user.
     """
-    return render(request, 'core/movie_recommender.html')
+    context = {}
+
+    if request.method == "POST":
+        # Getting data from a form
+        genre1 = request.POST.get("genre1")
+        genre2 = request.POST.get("genre2")
+        year_from = request.POST.get("year_from")
+        year_to = request.POST.get("year_to")
+        country = request.POST.get("country")
+        fav1 = request.POST.get("fav1")
+        fav2 = request.POST.get("fav2")
+        fav3 = request.POST.get("fav3")
+        wishlist = request.POST.get("wishlist")
+
+        # Building a prompt
+        prompt_parts = ["Recommend 3 movies in the format:\n"
+                        "Movie title\nYear: XXXX\nGenres: genre1, genre2, ...\nDescription: ...\n"
+                        "Use only existing films in English."]
+
+        if genre1:
+            prompt_parts.append(f"Genre: {genre1}")
+        if genre2:
+            prompt_parts.append(f"Second genre: {genre2}")
+        if year_from or year_to:
+            prompt_parts.append(f"Year of release: from {year_from or 'any'} to {year_to or 'today'}")
+        if country:
+            prompt_parts.append(f"Country of manufacture: {country}")
+        favs = [f for f in [fav1, fav2, fav3] if f]
+        if favs:
+            prompt_parts.append(f"I like these kinds of movies: {', '.join(favs)}")
+        if wishlist:
+            prompt_parts.append(f"Now I want to watch something like this: {wishlist}")
+
+        final_prompt = "\n".join(prompt_parts)
+
+        # Calling GPT via an openai_service.py
+        gpt_response = generate_movie_recommendations(final_prompt)
+
+        context["prompt"] = final_prompt
+        context["result"] = gpt_response
+
+
+    return render(request, "core/movie_recommender.html", context)
