@@ -5,7 +5,41 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    {% block body %}
-    {% endblock %}
+
+    <header>
+        <nav>
+            <ul style="list-style: none; display: flex; gap: 20px;">
+                <li><a href="{% url 'home' %}">🏠 Home</a></li>
+
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'movie-recommender' %}">🎬 Movies</a></li>
+                    <li><a href="{% url 'recommendation-history' %}">📜 History</a></li>
+                    <li>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit">🚪 Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'login-page' %}">🔐 Login</a></li>
+                    <li><a href="{% url 'register-page' %}">📝 Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <hr>
+
+        {% block body %}
+        {% endblock %}
+
+    <hr>
+
+    <footer>
+        <p style="text-align: center; font-size: 14px; color: gray;">
+            © 2025 ContentLumina
+        </p>
+    </footer>
+
 </body>
 </html>

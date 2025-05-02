@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+
+{% block title %}Recommendation history{% endblock %}
+
+{% block body %}
+<h2>Your recommendation history</h2>
+
+{% if recommendations %}
+    <ul>
+        {% for rec in recommendations %}
+            <li>
+                <strong>{{ rec.created_at|date:"Y-m-d H:i" }}</strong><br>
+                <details>
+                    <summary>Request</summary>
+                    <pre>{{ rec.prompt }}</pre>
+                </details>
+                <details>
+                    <summary>Response</summary>
+                    <pre>{{ rec.response }}</pre>
+                </details>
+                <hr>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>There are no saved recommendations yet.</p>
+{% endif %}
+{% endblock %}
