@@ -101,12 +101,25 @@ def register_page(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-        if username and password:
-            # Check unique username
-            if not User.objects.filter(username=username).exists():
-                # Create new user
-                User.objects.create_user(username=username, email=email, password=password)
-                return redirect("login-page")
+        # Checking that all fields are filled in
+        if not username or not email or not password:
+            return render(request, "core/register.html", {
+                "error": "All fields are required.."
+            })
+
+        # Checking uniqueness
+        if User.objects.filter(username=username).exists():
+            return render(request, "core/register.html", {
+                "error": "This username is already taken"
+            })
+        elif User.objects.filter(email=email).exists():
+            return render(request, "core/register.html", {
+                "error": "This email is already registered"
+            })
+
+        # Everything ok, create a user
+        User.objects.create_user(username=username, email=email, password=password)
+        return redirect("login-page")
 
     return render(request, "core/register.html")
 
@@ -132,7 +145,9 @@ def login_page(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect("generate-page")
+            return redirect("home")
+        else:
+            return render(request, "core/login.html", {"error": "Incorrect login or password"})
 
     return render(request, "core/login.html")
 
@@ -238,5 +253,5 @@ def recommendation_history(request):
     View to display the user's recommendation history.
     """
     user = request.user
-    recommendations = MovieRecommendation.objects.filter(user=user).order_by('-created_at')
-    return render(request, 'core/history.html', {'recommendations': recommendations})
+    recommendations = MovieRecommendation.objects.filter(user=user).order_by("-created_at")
+    return render(request, "core/history.html", {"recommendations": recommendations})
