@@ -1,18 +1,25 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'core/favicon.ico' %}">
 </head>
 <body>
 
     <header>
         <nav>
-            <ul style="list-style: none; display: flex; gap: 20px;">
-                <li><a href="{% url 'home' %}">🏠 Home</a></li>
+            <a href="{% url 'home' %}">
+                <img src="{% static 'core/logo.png' %}" alt="LuminaPicks" style="height: 40px; vertical-align: middle;">
+            </a>
 
+            <ul style="list-style: none; display: flex; gap: 20px;">
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'movie-recommender' %}">🎬 Movies</a></li>
+                    <li><a href="{% url 'series-recommender' %}">📺 Series</a></li>
+                    <li><a href="{% url 'series-history' %}">📺 Series History</a></li>
                     <li><a href="{% url 'recommendation-history' %}">📜 History</a></li>
                     <li>
                         <form method="post" action="{% url 'logout' %}">

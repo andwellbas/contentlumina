@@ -9,12 +9,14 @@ urlpatterns = [
     # Front
     path("register/", views.register_page, name="register-page"), # Register
     path("login/", views.login_page, name="login-page"), # Login
-    path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
+    path("logout/", LogoutView.as_view(next_page="home"), name="logout"),
     path("generate/", views.generate_page, name="generate-page"), # Generate
 
-    path("", views.home_page, name="home"),
-    path("movies/", views.movie_recommender, name="movie-recommender"),
-    path('history/', views.recommendation_history, name='recommendation-history'),
-    path('login-required/', TemplateView.as_view(
-        template_name="core/login_required.html"), name='login-required'),
+    path("", views.home_page, name="home"), # Home Page
+    path("movies/", views.movie_recommender, name="movie-recommender"), # Movies recommend page
+    path("series/", views.series_recommender, name="series-recommender"), # Series recommend page
+    path("history/", views.movies_history, name="recommendation-history"), # Movies History
+    path("series/history/", views.series_history, name="series-history"), # Series History
+    path("login-required/", TemplateView.as_view(
+        template_name="core/login_required.html"), name="login-required"), # Login Check
 ]

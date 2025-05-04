@@ -1,0 +1,205 @@
+{% extends "core/base.html" %}
+
+{% block title %}Series Recommender{% endblock %}
+
+{% block body %}
+<h1>Series Recommender</h1>
+
+<!-- FORM -->
+<div id="form-section" {% if result %}style="display: none;"{% endif %}>
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- GENRE -->
+        <label for="genre1">Genre:</label>
+        <select name="genre1" id="genre1">
+            <option value="">Choose a genre</option>
+                <option>Action</option>
+                <option>Adventure</option>
+                <option>Animation</option>
+                <option>Biography</option>
+                <option>Comedy</option>
+                <option>Crime</option>
+                <option>Documentary</option>
+                <option>Drama</option>
+                <option>Family</option>
+                <option>Fantasy</option>
+                <option>History</option>
+                <option>Horror</option>
+                <option>Music</option>
+                <option>Musical</option>
+                <option>Mystery</option>
+                <option>Romance</option>
+                <option>Sci-Fi</option>
+                <option>Sport</option>
+                <option>Thriller</option>
+                <option>War</option>
+                <option>Western</option>
+                <option>Short</option>
+                <option>Film-Noir</option>
+                <option>Reality-TV</option>
+                <option>Talk-Show</option>
+        </select><br><br>
+
+        <div id="add-genre2-container" style="display: none;">
+            <label><input type="checkbox" id="add-genre2"> Add an additional genre?</label><br>
+        </div>
+
+        <div id="genre2-container" style="display: none;">
+            <label for="genre2">Genre 2:</label>
+            <select name="genre2" id="genre2">
+                <option value="">Choose a genre</option>
+                    <option>Action</option>
+                    <option>Adventure</option>
+                    <option>Animation</option>
+                    <option>Biography</option>
+                    <option>Comedy</option>
+                    <option>Crime</option>
+                    <option>Documentary</option>
+                    <option>Drama</option>
+                    <option>Family</option>
+                    <option>Fantasy</option>
+                    <option>History</option>
+                    <option>Horror</option>
+                    <option>Music</option>
+                    <option>Musical</option>
+                    <option>Mystery</option>
+                    <option>Romance</option>
+                    <option>Sci-Fi</option>
+                    <option>Sport</option>
+                    <option>Thriller</option>
+                    <option>War</option>
+                    <option>Western</option>
+                    <option>Short</option>
+                    <option>Film-Noir</option>
+                    <option>Reality-TV</option>
+                    <option>Talk-Show</option>
+            </select><br><br>
+        </div>
+
+        <!-- YEARS -->
+        <label>Years of release:</label><br>
+        From: <input type="number" name="year_from" min="1900" max="2099" step="1">
+        To: <input type="number" name="year_to" min="1900" max="2099" step="1"><br><br>
+
+        <!-- COUNTRY -->
+        <label for="country">Country:</label>
+        <select name="country" id="country">
+            <option value="">Choose a country</option>
+                <option>Australia</option>
+                <option>Brazil</option>
+                <option>Canada</option>
+                <option>China</option>
+                <option>Denmark</option>
+                <option>France</option>
+                <option>Germany</option>
+                <option>Hong Kong</option>
+                <option>India</option>
+                <option>Italy</option>
+                <option>Japan</option>
+                <option>Mexico</option>
+                <option>Romania</option>
+                <option>Russia</option>
+                <option>South Korea</option>
+                <option>Spain</option>
+                <option>Sweden</option>
+                <option>Thailand</option>
+                <option>Turkey</option>
+                <option>Ukraine</option>
+                <option>United Kingdom</option>
+                <option>USA</option>
+        </select><br><br>
+
+        <!-- FAVORITE FILMS -->
+        <label for="fav1">Favorite series:</label>
+        <input type="text" name="fav1" id="fav1"><br><br>
+
+        <div id="add-fav2-container" style="display: none;">
+            <label><input type="checkbox" id="add-fav2"> Add another series?</label><br>
+        </div>
+
+        <div id="fav2-container" style="display: none;">
+            <input type="text" name="fav2" placeholder="Series 2" id="fav2"><br><br>
+        </div>
+
+        <div id="add-fav3-container" style="display: none;">
+            <label><input type="checkbox" id="add-fav3"> Add another series?</label><br>
+        </div>
+
+        <div id="fav3-container" style="display: none;">
+            <input type="text" name="fav3" placeholder="Series 3"><br><br>
+        </div>
+
+        <!-- WISH -->
+        <label for="wishlist">What do you feel like watching right now?</label><br>
+        <textarea name="wishlist" id="wishlist" rows="4" cols="50"></textarea><br><br>
+
+        <button type="submit">Find series</button>
+    </form>
+</div>
+
+<!-- RESULT -->
+<div id="result-section" {% if not result %}style="display: none;"{% endif %}>
+    {% if result %}
+        <h3>Recommended series:</h3>
+        <p>{{ result|linebreaks }}</p>
+        <button onclick="tryAgain()">🔁 Try again</button>
+    {% endif %}
+
+    {% if error %}
+        <h3 style="color: red;">❌ {{ error }}</h3>
+    {% endif %}
+</div>
+
+<!-- JS: Toggle visibility -->
+<script>
+    function tryAgain() {
+        document.getElementById('form-section').style.display = 'block';
+        document.getElementById('result-section').style.display = 'none';
+    }
+
+    // Show checkbox for second genre after selecting first
+    document.getElementById('genre1').addEventListener('change', function () {
+        if (this.value !== "") {
+            document.getElementById('add-genre2-container').style.display = 'block';
+        } else {
+            document.getElementById('add-genre2-container').style.display = 'none';
+            document.getElementById('genre2-container').style.display = 'none';
+            document.getElementById('add-genre2').checked = false;
+        }
+    });
+
+    document.getElementById('add-genre2').addEventListener('change', function () {
+        document.getElementById('genre2-container').style.display = this.checked ? 'block' : 'none';
+    });
+
+    // Logic for dynamically adding favorite movies
+    document.getElementById('fav1').addEventListener('input', function () {
+        if (this.value.trim() !== "") {
+            document.getElementById('add-fav2-container').style.display = 'block';
+        } else {
+            document.getElementById('add-fav2-container').style.display = 'none';
+            document.getElementById('fav2-container').style.display = 'none';
+            document.getElementById('add-fav2').checked = false;
+        }
+    });
+
+    document.getElementById('add-fav2').addEventListener('change', function () {
+        document.getElementById('fav2-container').style.display = this.checked ? 'block' : 'none';
+    });
+
+    document.getElementById('fav2').addEventListener('input', function () {
+        if (this.value.trim() !== "") {
+            document.getElementById('add-fav3-container').style.display = 'block';
+        } else {
+            document.getElementById('add-fav3-container').style.display = 'none';
+            document.getElementById('fav3-container').style.display = 'none';
+            document.getElementById('add-fav3').checked = false;
+        }
+    });
+
+    document.getElementById('add-fav3').addEventListener('change', function () {
+        document.getElementById('fav3-container').style.display = this.checked ? 'block' : 'none';
+    });
+</script>
+{% endblock %}

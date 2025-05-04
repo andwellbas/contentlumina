@@ -4,7 +4,7 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from .serializers import GeneratedContentSerializer
-from .models import Prompt, GeneratedContent, MovieRecommendation
+from .models import Prompt, GeneratedContent, MovieRecommendation, SeriesRecommendation
 from .services.openai_service import generate_text, generate_movie_recommendations
 from django.utils import timezone
 
@@ -235,6 +235,7 @@ def movie_recommender(request):
 
         context["prompt"] = user_prompt
         context["result"] = gpt_response
+        context["submitted"] = True
 
         # Save prompt and response to db
         MovieRecommendation.objects.create(
@@ -248,10 +249,85 @@ def movie_recommender(request):
 
 
 @login_required
-def recommendation_history(request):
+def series_recommender(request):
     """
-    View to display the user's recommendation history.
+    View for generating TV series recommendations via OpenAI.
+    Gets data from the form, builds a prompt, calls generate_movie_recommendations(),
+    returns a response to the user.
+    """
+    context = {}
+
+    if request.method == "POST":
+        # Getting data from a form
+        genre1 = request.POST.get("genre1")
+        genre2 = request.POST.get("genre2")
+        year_from = request.POST.get("year_from")
+        year_to = request.POST.get("year_to")
+        country = request.POST.get("country")
+        fav1 = request.POST.get("fav1")
+        fav2 = request.POST.get("fav2")
+        fav3 = request.POST.get("fav3")
+        wishlist = request.POST.get("wishlist")
+
+        # Building a prompt
+        user_prompt_parts = []
+
+        if genre1:
+            user_prompt_parts.append(f"Genre: {genre1}")
+        if genre2:
+            user_prompt_parts.append(f"Second genre: {genre2}")
+        if year_from or year_to:
+            user_prompt_parts.append(f"Year of release: from {year_from or 'any'} to {year_to or 'today'}")
+        if country:
+            user_prompt_parts.append(f"Country of manufacture: {country}")
+        favs = [f for f in [fav1, fav2, fav3] if f]
+        if favs:
+            user_prompt_parts.append(f"I like these kinds of series: {', '.join(favs)}")
+        if wishlist:
+            user_prompt_parts.append(f"Now I want to watch something like this: {wishlist}")
+
+        user_prompt = "\n".join(user_prompt_parts)
+
+        # Full prompt for GPT
+        gpt_prompt = (
+            "Recommend 3 TV series in the format:\n"
+            "Title\nYear: XXXX\nGenres: genre1, genre2, ...\nDescription: 1-2 sentence summary.\n"
+            "Use only existing real series in English.\n\n" +
+            user_prompt
+        )
+
+        # Calling GPT via openai_service.py
+        gpt_response = generate_movie_recommendations(gpt_prompt)
+
+        context["prompt"] = user_prompt
+        context["result"] = gpt_response
+        context["submitted"] = True
+
+        # Save prompt and response to db
+        SeriesRecommendation.objects.create(
+            user=request.user,
+            prompt=user_prompt,
+            response=gpt_response
+        )
+
+    return render(request, "core/series_recommender.html", context)
+
+
+@login_required
+def movies_history(request):
+    """
+    View to display the user's movies recommendation history.
     """
     user = request.user
     recommendations = MovieRecommendation.objects.filter(user=user).order_by("-created_at")
     return render(request, "core/history.html", {"recommendations": recommendations})
+
+
+@login_required
+def series_history(request):
+    """
+    View to display the user's series recommendation history.
+    """
+    user = request.user
+    recommendations = SeriesRecommendation.objects.filter(user=user).order_by("-created_at")
+    return render(request, "core/series_history.html", {"recommendations": recommendations})
