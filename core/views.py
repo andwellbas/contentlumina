@@ -12,6 +12,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
+import requests
+from django.conf import settings
+
 
 class RegisterView(APIView):
     """
@@ -101,6 +104,23 @@ def register_page(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
+        # reCAPTCHA verification
+        captcha_response = request.POST.get("g-recaptcha-response")
+        verify_url = "https://www.google.com/recaptcha/api/siteverify"
+        payload = {
+            "secret": settings.RECAPTCHA_SECRET_KEY,
+            "response": captcha_response
+        }
+        res = requests.post(verify_url, data=payload)
+        result = res.json()
+
+        if not result.get("success"):
+            return render(request, "core/register.html", {
+                "error": "reCAPTCHA verification failed",
+                "RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY
+            })
+
+
         # Checking that all fields are filled in
         if not username or not email or not password:
             return render(request, "core/register.html", {
@@ -121,7 +141,7 @@ def register_page(request):
         User.objects.create_user(username=username, email=email, password=password)
         return redirect("login-page")
 
-    return render(request, "core/register.html")
+    return render(request, "core/register.html", {"RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY})
 
 
 def login_page(request):
@@ -141,6 +161,22 @@ def login_page(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
+        # reCAPTCHA verification
+        captcha_response = request.POST.get("g-recaptcha-response")
+        verify_url = "https://www.google.com/recaptcha/api/siteverify"
+        payload = {
+            "secret": settings.RECAPTCHA_SECRET_KEY,
+            "response": captcha_response
+        }
+        res = requests.post(verify_url, data=payload)
+        result = res.json()
+
+        if not result.get("success"):
+            return render(request, "core/login.html", {
+                "error": "reCAPTCHA verification failed",
+                "RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY
+            })
+
         # Authenticate user
         user = authenticate(request, username=username, password=password)
         if user is not None:
@@ -149,7 +185,7 @@ def login_page(request):
         else:
             return render(request, "core/login.html", {"error": "Incorrect login or password"})
 
-    return render(request, "core/login.html")
+    return render(request, "core/login.html", {"RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY})
 
 
 @login_required
