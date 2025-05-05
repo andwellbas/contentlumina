@@ -7,13 +7,14 @@ from .serializers import GeneratedContentSerializer
 from .models import Prompt, GeneratedContent, MovieRecommendation, SeriesRecommendation
 from .services.openai_service import generate_text, generate_movie_recommendations
 from django.utils import timezone
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
 import requests
 from django.conf import settings
+import random
+from django.core.mail import send_mail
 
 
 class RegisterView(APIView):
@@ -137,11 +138,67 @@ def register_page(request):
                 "error": "This email is already registered"
             })
 
-        # Everything ok, create a user
-        User.objects.create_user(username=username, email=email, password=password)
-        return redirect("login-page")
+        # Create code for email
+        code = str(random.randint(100000, 999999))
+
+        # User data retention
+        request.session["reg_username"] = username
+        request.session["reg_email"] = email
+        request.session["reg_password"] = password
+        request.session["reg_code"] = code
+
+        # Send the code via SMTP
+        send_mail(
+            subject="🎉 Confirmation of registration on LuminaPicks",
+            message=(
+                    f"Greetings, {username}!\n\n"
+                    f"Thank you for joining LuminaPicks 💡\n\n"
+                    f"To complete your registration, enter this 6-digit verification code:\n\n"
+                    f"🔐 Code: {code}\n\n"
+                    f"If it wasn't you who tried to register - just ignore this email..\n\n"
+                    f"Sincerely,\n"
+                    f"LuminaPicks Team"
+                ),
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
+        return redirect("verify-register-code")
 
     return render(request, "core/register.html", {"RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY})
+
+
+def verify_register_code(request):
+    """
+    View for verify the confirmation code during registration.
+    If the code is correct, the user is created and redirected to the login..
+    """
+    if request.method == "POST":
+        input_code = request.POST.get("code")
+        real_code = request.session.get("reg_code")
+
+        if input_code == real_code:
+            username = request.session.get("reg_username")
+            email = request.session.get("reg_email")
+            password = request.session.get("reg_password")
+
+            if username and email and password:
+                User.objects.create_user(username=username, email=email, password=password)
+
+                # Clear session after successful registration
+                request.session.pop("reg_username", None)
+                request.session.pop("reg_email", None)
+                request.session.pop("reg_password", None)
+                request.session.pop("reg_code", None)
+
+                return redirect("login-page")
+            else:
+                return render(request, "core/verify_code.html", {"error": "Not enough data to create a user."})
+        else:
+            return render(request, "core/verify_code.html", {"error": "Invalid confirmation code."})
+
+    return render(request, "core/verify_code.html")
 
 
 def login_page(request):

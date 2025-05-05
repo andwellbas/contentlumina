@@ -9,7 +9,8 @@ urlpatterns = [
     # Front
     path("register/", views.register_page, name="register-page"), # Register
     path("login/", views.login_page, name="login-page"), # Login
-    path("logout/", LogoutView.as_view(next_page="home"), name="logout"),
+    path("verify-register-code/", views.verify_register_code, name="verify-register-code"), # Email confirm
+    path("logout/", LogoutView.as_view(next_page="home"), name="logout"), # Logaut
     path("generate/", views.generate_page, name="generate-page"), # Generate
 
     path("", views.home_page, name="home"), # Home Page
