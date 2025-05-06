@@ -1,0 +1,57 @@
+{% extends "core/base.html" %}
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+  <h1>👤 {{ user.username }}</h1>
+
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  <p><strong>Registration date:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
+  <p><strong>Movie requests:</strong> {{ movie_count }}</p>
+  <p><strong>Requests for TV series:</strong> {{ series_count }}</p>
+
+  <hr>
+
+  <button onclick="toggleSection('movies')">🎬 History of films</button>
+  <div id="movies" style="display: none;">
+    {% if movie_recs %}
+      <ul>
+        {% for rec in movie_recs %}
+          <li><strong>{{ rec.created_at|date:"d.m.Y H:i" }}</strong>:<br>
+            {{ rec.response|linebreaks }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No movie history.</p>
+    {% endif %}
+  </div>
+
+  <hr>
+
+  <button onclick="toggleSection('series')">📺 History of TV series</button>
+  <div id="series" style="display: none;">
+    {% if series_recs %}
+      <ul>
+        {% for rec in series_recs %}
+          <li><strong>{{ rec.created_at|date:"d.m.Y H:i" }}</strong>:<br>
+            {{ rec.response|linebreaks }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No TV series history.</p>
+    {% endif %}
+  </div>
+
+  <hr>
+
+  <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">🚪 Logout</button>
+  </form>
+
+  <script>
+    function toggleSection(id) {
+      const el = document.getElementById(id);
+      el.style.display = el.style.display === "none" ? "block" : "none";
+    }
+  </script>
+{% endblock %}

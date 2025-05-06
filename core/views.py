@@ -407,20 +407,21 @@ def series_recommender(request):
 
 
 @login_required
-def movies_history(request):
+def profile_view(request):
     """
-    View to display the user's movies recommendation history.
-    """
-    user = request.user
-    recommendations = MovieRecommendation.objects.filter(user=user).order_by("-created_at")
-    return render(request, "core/history.html", {"recommendations": recommendations})
-
-
-@login_required
-def series_history(request):
-    """
-    View to display the user's series recommendation history.
+    View for user profile page.
+    Shows basic information and recommendation history.
     """
     user = request.user
-    recommendations = SeriesRecommendation.objects.filter(user=user).order_by("-created_at")
-    return render(request, "core/series_history.html", {"recommendations": recommendations})
+    movie_recs = MovieRecommendation.objects.filter(user=user).order_by("-created_at")
+    series_recs = SeriesRecommendation.objects.filter(user=user).order_by("-created_at")
+
+    context = {
+        "user": user,
+        "movie_recs": movie_recs,
+        "series_recs": series_recs,
+        "movie_count": movie_recs.count(),
+        "series_count": series_recs.count(),
+    }
+
+    return render(request, "core/profile.html", context)

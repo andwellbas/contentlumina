@@ -19,14 +19,13 @@
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'movie-recommender' %}">🎬 Movies</a></li>
                     <li><a href="{% url 'series-recommender' %}">📺 Series</a></li>
-                    <li><a href="{% url 'series-history' %}">📺 Series History</a></li>
-                    <li><a href="{% url 'recommendation-history' %}">📜 History</a></li>
                     <li>
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
                             <button type="submit">🚪 Logout</button>
                         </form>
                     </li>
+                    <li><a href="{% url 'profile' %}">👤 Your Profile</a></li>
                 {% else %}
                     <li><a href="{% url 'login-page' %}">🔐 Login</a></li>
                     <li><a href="{% url 'register-page' %}">📝 Register</a></li>
