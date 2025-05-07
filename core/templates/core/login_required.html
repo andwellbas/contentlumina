@@ -1,8 +1,21 @@
 {% extends "core/base.html" %}
+{% load static %}
 
-{% block title %}Login Required{% endblock %}
+{% block title %}Welcome!{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/login_required.css' %}">
+{% endblock %}
 
 {% block body %}
-<h2>🚫 You must be logged in to view this page.</h2>
-<p><a href="{% url 'login-page' %}">🔐 Log in here</a></p>
+<div class="access-wrapper">
+    <h2 class="access-title">👋 Hey there!</h2>
+    <p class="access-message">
+        To see this page, please <strong>log in</strong> or <strong>create an account</strong>.
+    </p>
+    <div class="access-buttons">
+        <a href="{% url 'login-page' %}" class="access-button">🔐 Log in</a>
+        <a href="{% url 'register-page' %}" class="access-button alt">📝 Register</a>
+    </div>
+</div>
 {% endblock %}

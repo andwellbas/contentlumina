@@ -1,24 +1,33 @@
 {% extends "core/base.html" %}
+{% load static %}
 
 {% block title %}Login{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'core/login.css' %}">
+{% endblock %}
+
 {% block body %}
-    <h1>Login</h1>
+<div class="form-wrapper">
+    <h1 class="form-title">Wellcome Back</h1>
 
     {% if error %}
-        <p style="color: red;">{{ error }}</p>
+        <p class="form-error">{{ error }}</p>
     {% endif %}
 
-    <form method="post">
+    <form method="post" class="auth-form">
         {% csrf_token %}
         <input type="text" name="username" placeholder="Username" required><br>
         <input type="password" name="password" placeholder="Password" required><br>
 
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-        <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_SITE_KEY }}"></div>
+        <div class="captcha-wrapper">
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_SITE_KEY }}"></div>
+        </div>
 
-        <button type="submit">Login</button>
+        <button type="submit" class="form-button">Login</button>
     </form>
 
-    <p>Don't have an account? <a href="{% url 'register-page' %}">Register here</a></p>
+    <p class="form-footer">Don't have an account? <a href="{% url 'register-page' %}">Register here</a></p>
+</div>
 {% endblock %}

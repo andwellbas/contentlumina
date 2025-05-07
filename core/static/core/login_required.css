@@ -1,0 +1,83 @@
+.access-wrapper {
+    background-color: #1a1a1a;
+    padding: 40px;
+    border-radius: 10px;
+    max-width: 450px;
+    margin: 80px auto;
+    box-shadow: 0 0 20px rgba(162, 33, 245, 0.2);
+    text-align: center;
+}
+
+.access-title {
+    font-size: 26px;
+    color: #f374f7;
+    margin-bottom: 15px;
+    text-shadow: 0 0 8px #a221f5;
+}
+
+.access-message {
+    font-size: 16px;
+    color: #ccc;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.access-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.access-button {
+    display: inline-block;
+    background-color: #a221f5;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px #a221f5;
+}
+
+.access-button:hover {
+    background-color: #f374f7;
+    color: #0f0f0f;
+    box-shadow: 0 0 15px #f374f7;
+    transform: scale(1.05);
+}
+
+.access-button.alt {
+    background-color: transparent;
+    border: 2px solid #f374f7;
+    color: #f374f7;
+    box-shadow: none;
+}
+
+.access-button.alt:hover {
+    background-color: #f374f7;
+    color: #0f0f0f;
+    box-shadow: 0 0 10px #f374f7;
+}
+
+/* For phones */
+@media (max-width: 500px) {
+    .access-wrapper {
+        margin: 40px 20px;
+        padding: 30px;
+    }
+
+    .access-title {
+        font-size: 22px;
+    }
+
+    .access-message {
+        font-size: 15px;
+    }
+
+    .access-button {
+        width: 100%;
+        text-align: center;
+    }
+}

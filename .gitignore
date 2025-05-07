@@ -25,7 +25,3 @@ db.sqlite3
 # OS files
 .DS_Store
 Thumbs.db
-
-# Static Files
-**/static/*
-!**/static/.keep

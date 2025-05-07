@@ -1,7 +1,44 @@
 {% extends "core/base.html" %}
+{% load static %}
 
-{% block title %}Content Recommender{% endblock %}
+{% block title %}LuminaPicks — Your AI Recommender{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/home.css' %}">
+{% endblock %}
 
 {% block body %}
-    <h1>This is a home page</h1>
+<section class="hero">
+    <div class="hero-content">
+        <img src="{% static 'core/logo.png' %}" alt="LuminaPicks" class="hero-logo">
+        <h1 class="hero-title">Find your next obsession.</h1>
+        <p class="hero-subtitle">Movies, Series, Anime, Games — powered by AI that knows what you like.</p>
+
+        <div class="hero-buttons">
+            <a href="{% url 'movie-recommender' %}" class="home-button">🎬 Recommend me movies</a>
+            <a href="{% url 'series-recommender' %}" class="home-button">📺 Recommend series</a>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="feature">
+        <h3>🎯 Personalized</h3>
+        <p>Recommendations based on your mood, genre & favorites.</p>
+    </div>
+    <div class="feature">
+        <h3>🤖 GPT-Powered</h3>
+        <p>AI-crafted results — not boring filters, real intelligence.</p>
+    </div>
+    <div class="feature">
+        <h3>🎮 Multi-media</h3>
+        <p>Movies, series, anime, games — all in one cozy place.</p>
+    </div>
+</section>
+
+<section class="ai-dialogue">
+    <div class="chat-bubble ai">🤖: What do you feel like watching?</div>
+    <div class="chat-bubble user">👤: Something like Inception, but weirder</div>
+    <div class="chat-bubble ai">🤖: Got it. You’ll love “The OA” and “Dark”.</div>
+</section>
 {% endblock %}

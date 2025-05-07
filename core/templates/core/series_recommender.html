@@ -1,9 +1,15 @@
 {% extends "core/base.html" %}
+{% load static %}
 
 {% block title %}Series Recommender{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'core/series.css' %}">
+{% endblock %}
+
 {% block body %}
-<h1>Series Recommender</h1>
+<div class="series-recommender-wrapper">
+    <h1 class="form-title">📺 Series Recommender</h1>
 
 <!-- FORM -->
 <div id="form-section" {% if result %}style="display: none;"{% endif %}>
@@ -39,7 +45,7 @@
                 <option>Film-Noir</option>
                 <option>Reality-TV</option>
                 <option>Talk-Show</option>
-        </select><br><br>
+        </select>
 
         <div id="add-genre2-container" style="display: none;">
             <label><input type="checkbox" id="add-genre2"> Add an additional genre?</label><br>
@@ -74,13 +80,15 @@
                     <option>Film-Noir</option>
                     <option>Reality-TV</option>
                     <option>Talk-Show</option>
-            </select><br><br>
+            </select>
         </div>
 
         <!-- YEARS -->
-        <label>Years of release:</label><br>
-        From: <input type="number" name="year_from" min="1900" max="2099" step="1">
-        To: <input type="number" name="year_to" min="1900" max="2099" step="1"><br><br>
+        <label>Years of release:</label>
+        <div class="years-row">
+        <input type="number" name="year_from" placeholder="From" min="1900" max="2099">
+        <input type="number" name="year_to" placeholder="To" min="1900" max="2099">
+          </div>
 
         <!-- COUNTRY -->
         <label for="country">Country:</label>
@@ -108,33 +116,33 @@
                 <option>Ukraine</option>
                 <option>United Kingdom</option>
                 <option>USA</option>
-        </select><br><br>
+        </select>
 
         <!-- FAVORITE FILMS -->
         <label for="fav1">Favorite series:</label>
-        <input type="text" name="fav1" id="fav1"><br><br>
+        <input type="text" name="fav1" id="fav1">
 
         <div id="add-fav2-container" style="display: none;">
-            <label><input type="checkbox" id="add-fav2"> Add another series?</label><br>
+            <label><input type="checkbox" id="add-fav2"> Add another series?</label>
         </div>
 
         <div id="fav2-container" style="display: none;">
-            <input type="text" name="fav2" placeholder="Series 2" id="fav2"><br><br>
+            <input type="text" name="fav2" placeholder="Series 2" id="fav2">
         </div>
 
         <div id="add-fav3-container" style="display: none;">
-            <label><input type="checkbox" id="add-fav3"> Add another series?</label><br>
+            <label><input type="checkbox" id="add-fav3"> Add another series?</label>
         </div>
 
         <div id="fav3-container" style="display: none;">
-            <input type="text" name="fav3" placeholder="Series 3"><br><br>
+            <input type="text" name="fav3" placeholder="Series 3">
         </div>
 
         <!-- WISH -->
-        <label for="wishlist">What do you feel like watching right now?</label><br>
-        <textarea name="wishlist" id="wishlist" rows="4" cols="50"></textarea><br><br>
+        <label for="wishlist">What do you feel like watching right now?</label>
+        <textarea name="wishlist" id="wishlist" rows="4" cols="50"></textarea>
 
-        <button type="submit">Find series</button>
+        <button type="submit" class="submit-button">Find movies</button>
     </form>
 </div>
 
@@ -143,12 +151,13 @@
     {% if result %}
         <h3>Recommended series:</h3>
         <p>{{ result|linebreaks }}</p>
-        <button onclick="tryAgain()">🔁 Try again</button>
+        <button onclick="tryAgain()" class="try-again-button">🔁 Try again</button>
     {% endif %}
 
     {% if error %}
         <h3 style="color: red;">❌ {{ error }}</h3>
     {% endif %}
+</div>
 </div>
 
 <!-- JS: Toggle visibility -->

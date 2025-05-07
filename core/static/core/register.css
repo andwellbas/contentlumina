@@ -1,0 +1,85 @@
+.form-wrapper {
+    background-color: #1a1a1a;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(162, 33, 245, 0.3);
+    max-width: 400px;
+    margin: 60px auto;
+    text-align: center;
+}
+
+.form-title {
+    margin-bottom: 25px;
+    color: #f374f7;
+}
+
+.form-error {
+    color: #ff4c4c;
+    margin-bottom: 15px;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background-color: #2a2a2a;
+    color: #fff;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.auth-form input:focus {
+    outline: none;
+    background-color: #333;
+    box-shadow: 0 0 8px #f374f7;
+}
+
+.form-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #f374f7;
+    border: none;
+    border-radius: 5px;
+    color: #0f0f0f;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-button:hover {
+    background-color: #a221f5;
+    color: #fff;
+    box-shadow: 0 0 10px #a221f5;
+}
+
+.form-footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.form-footer a {
+    color: #f374f7;
+    text-decoration: none;
+}
+
+.form-footer a:hover {
+    text-shadow: 0 0 6px #f374f7;
+}
+
+.captcha-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px #f374f7;
+    background-color: #1a1a1a;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}

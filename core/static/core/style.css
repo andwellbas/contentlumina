@@ -1,0 +1,120 @@
+/* === GLOBAL === */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #0f0f0f;
+    font-family: 'Poppins', sans-serif;
+    color: #f0f0f0;
+}
+
+a {
+    color: #f374f7;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px #f374f7;
+}
+
+/* === HEADER === */
+.main-header {
+    background-color: #131313;
+    height: 70px;
+    padding: 0 30px;
+    border-bottom: 1px solid #333;
+    box-shadow: 0 0 15px #a221f5;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.logo img {
+    height: 100%;
+    max-height: 100px;
+    transform: scale(1.4); /* збільшує візуально */
+    transform-origin: left center; /* щоб не з'їжджало */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links a {
+    font-weight: 600;
+    font-size: 16px;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+/* === BUTTON === */
+.logout-icon-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 22px;
+    color: #f374f7;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 6px;
+    border-radius: 50%;
+}
+
+.logout-icon-btn:hover {
+    color: #ffffff;
+    box-shadow: 0 0 8px #f374f7;
+    background-color: rgba(243, 116, 247, 0.1);
+    transform: scale(1.1);
+}
+
+/* === CONTAINER === */
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* === FOOTER === */
+.footer {
+    background-color: rgba(20, 20, 20, 0.9);
+    padding: 30px 20px;
+    text-align: center;
+    border-top: 1px solid #333;
+    box-shadow: 0 -1px 10px rgba(243, 116, 247, 0.1);
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.footer-text {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.footer-brand {
+    color: #f374f7;
+    font-weight: bold;
+    text-shadow: 0 0 5px #a221f5;
+}
+
+.footer-powered {
+    color: #555;
+    font-size: 13px;
+    font-style: italic;
+}

@@ -1,0 +1,150 @@
+.series-recommender-wrapper {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(162, 33, 245, 0.3);
+}
+
+.form-title {
+    color: #f374f7;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    color: #ccc;
+}
+
+form input[type="text"],
+form input[type="number"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2a2a2a;
+    color: #fff;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+    outline: none;
+    box-shadow: 0 0 6px #f374f7;
+    background-color: #333;
+}
+
+.years-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.years-row input {
+    flex: 1;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 25px;
+    background-color: #a221f5;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #f374f7;
+    color: #0f0f0f;
+    box-shadow: 0 0 10px #f374f7;
+}
+
+.toggle-container {
+    margin-top: 10px;
+    color: #aaa;
+}
+
+.extra-input {
+    margin-top: 10px;
+}
+
+.result-section {
+    margin-top: 40px;
+    background-color: #131313;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(243, 116, 247, 0.2);
+}
+
+.result-box {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 8px rgba(243, 116, 247, 0.2);
+    color: #eee;
+}
+
+.form-error {
+    color: #ff4c4c;
+    margin-top: 15px;
+}
+
+/* For phones */
+@media (max-width: 600px) {
+    .series-recommender-wrapper {
+        padding: 20px;
+        margin: 20px;
+    }
+
+.years-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.years-row input {
+    flex: 1;
+}
+
+    button[type="submit"] {
+        font-size: 15px;
+    }
+
+    .form-title {
+        font-size: 20px;
+    }
+}
+
+.try-again-button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background-color: transparent;
+    border: 2px solid #f374f7;
+    border-radius: 5px;
+    color: #f374f7;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.try-again-button:hover {
+    background-color: #f374f7;
+    color: #0f0f0f;
+    box-shadow: 0 0 10px #f374f7;
+    transform: scale(1.03);
+}

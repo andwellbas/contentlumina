@@ -1,19 +1,27 @@
 {% extends "core/base.html" %}
+{% load static %}
 
 {% block title %}Generate Content{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/generate.css' %}">
+{% endblock %}
 
 {% block body %}
-    <h1>Generate Content</h1>
+<div class="generate-wrapper">
+    <h1 class="generate-title">✨ Generate with AI</h1>
 
-    <form method="post">
+    <form method="post" class="generate-form">
         {% csrf_token %}
-        <textarea name="text" placeholder="Enter your prompt here..." required></textarea><br>
-        <button type="submit">Generate</button>
+        <textarea name="text" placeholder="Enter your prompt here..." required></textarea>
+        <button type="submit" class="submit-button">Generate</button>
     </form>
 
     {% if ai_response %}
-        <h2>AI Response:</h2>
-        <p>{{ ai_response }}</p>
+        <div class="response-block">
+            <h2>💡 AI Response:</h2>
+            <p>{{ ai_response }}</p>
+        </div>
     {% endif %}
+</div>
 {% endblock %}

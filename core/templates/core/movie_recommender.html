@@ -1,13 +1,19 @@
 {% extends "core/base.html" %}
+{% load static %}
 
 {% block title %}Movie Recommender{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'core/movie.css' %}">
+{% endblock %}
+
 {% block body %}
-<h1>🎬 Movie Recommender</h1>
+<div class="movie-recommender-wrapper">
+<h1 class="form-title">🎬 Movie Recommender</h1>
 
 <!-- FORM -->
-<div id="form-section" {% if result %}style="display: none;"{% endif %}>
-    <form method="post">
+<div id="form-section" class="movie-form-section" {% if result %}style="display: none;"{% endif %}>
+    <form method="post" class="movie-form">
         {% csrf_token %}
 
         <!-- GENRE -->
@@ -39,16 +45,16 @@
                 <option>Film-Noir</option>
                 <option>Reality-TV</option>
                 <option>Talk-Show</option>
-        </select><br><br>
+        </select>
 
-        <div id="add-genre2-container" style="display: none;">
-            <label><input type="checkbox" id="add-genre2"> Add an additional genre?</label><br>
+        <div id="add-genre2-container" class="toggle-container" style="display: none;">
+            <label><input type="checkbox" id="add-genre2"> Add an additional genre?</label>
         </div>
 
-        <div id="genre2-container" style="display: none;">
+        <div id="genre2-container" class="extra-input" style="display: none;">
             <label for="genre2">Genre 2:</label>
-            <select name="genre2" id="genre2">
-                <option value="">Choose a genre</option>
+                <select name="genre2" id="genre2">
+                    <option value="">Choose a genre</option>
                     <option>Action</option>
                     <option>Adventure</option>
                     <option>Animation</option>
@@ -74,17 +80,19 @@
                     <option>Film-Noir</option>
                     <option>Reality-TV</option>
                     <option>Talk-Show</option>
-            </select><br><br>
+            </select>
         </div>
 
         <!-- YEARS -->
-        <label>Years of release:</label><br>
-        From: <input type="number" name="year_from" min="1900" max="2099" step="1">
-        To: <input type="number" name="year_to" min="1900" max="2099" step="1"><br><br>
+        <label>Years of release:</label>
+      <div class="years-row">
+        <input type="number" name="year_from" placeholder="From" min="1900" max="2099">
+        <input type="number" name="year_to" placeholder="To" min="1900" max="2099">
+      </div>
 
         <!-- COUNTRY -->
         <label for="country">Country:</label>
-        <select name="country" id="country">
+            <select name="country" id="country">
             <option value="">Choose a country</option>
                 <option>Australia</option>
                 <option>Brazil</option>
@@ -108,33 +116,33 @@
                 <option>Ukraine</option>
                 <option>United Kingdom</option>
                 <option>USA</option>
-        </select><br><br>
+        </select>
 
         <!-- FAVORITE FILMS -->
         <label for="fav1">Favorite movie:</label>
-        <input type="text" name="fav1" id="fav1"><br><br>
+        <input type="text" name="fav1" id="fav1" placeholder="Movie 1">
 
-        <div id="add-fav2-container" style="display: none;">
-            <label><input type="checkbox" id="add-fav2"> Add another movie?</label><br>
+        <div id="add-fav2-container" class="toggle-container" style="display: none;">
+            <label><input type="checkbox" id="add-fav2"> Add another movie?</label>
         </div>
 
-        <div id="fav2-container" style="display: none;">
-            <input type="text" name="fav2" placeholder="Movie 2" id="fav2"><br><br>
+        <div id="fav2-container" class="extra-input" style="display: none;">
+            <input type="text" name="fav2" id="fav2" placeholder="Movie 2">
         </div>
 
-        <div id="add-fav3-container" style="display: none;">
-            <label><input type="checkbox" id="add-fav3"> Add another movie?</label><br>
+        <div id="add-fav3-container" class="toggle-container" style="display: none;">
+            <label><input type="checkbox" id="add-fav3"> Add another movie?</label>
         </div>
 
-        <div id="fav3-container" style="display: none;">
-            <input type="text" name="fav3" placeholder="Movie 3"><br><br>
+        <div id="fav3-container" class="extra-input" style="display: none;">
+            <input type="text" name="fav3" placeholder="Movie 3">
         </div>
 
         <!-- WISH -->
-        <label for="wishlist">What do you feel like watching right now?</label><br>
-        <textarea name="wishlist" id="wishlist" rows="4" cols="50"></textarea><br><br>
+        <label for="wishlist">What do you feel like watching?</label>
+        <textarea name="wishlist" id="wishlist" rows="4" placeholder="Sci-fi adventure about space pirates..."></textarea>
 
-        <button type="submit">Find movies</button>
+        <button type="submit" class="submit-button">Find movies</button>
     </form>
 </div>
 
@@ -143,12 +151,13 @@
     {% if result %}
         <h3>Recommended movies:</h3>
         <p>{{ result|linebreaks }}</p>
-        <button onclick="tryAgain()">🔁 Try again</button>
+        <button onclick="tryAgain()" class="try-again-button">🔁 Try again</button>
     {% endif %}
 
     {% if error %}
         <h3 style="color: red;">❌ {{ error }}</h3>
     {% endif %}
+</div>
 </div>
 
 <!-- JS: Toggle visibility -->
