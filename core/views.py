@@ -425,3 +425,19 @@ def profile_view(request):
     }
 
     return render(request, "core/profile.html", context)
+
+
+@login_required
+def anime_recommender(request):
+    """
+    anime recommender page.
+    """
+    return render(request, "core/anime_recommender.html")
+
+
+@login_required
+def games_recommender(request):
+    """
+    games recommender page.
+    """
+    return render(request, "core/games_recommender.html")

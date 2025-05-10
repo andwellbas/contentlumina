@@ -11,6 +11,11 @@
 <div class="series-recommender-wrapper">
     <h1 class="form-title">📺 Series Recommender</h1>
 
+    <p class="form-hint">
+    ℹ️ All fields are optional. The more you enter — the more accurate the results.<br>
+    Leave everything empty for random recommendations.
+    </p>
+
 <!-- FORM -->
 <div id="form-section" {% if result %}style="display: none;"{% endif %}>
     <form method="post">
@@ -120,7 +125,7 @@
 
         <!-- FAVORITE FILMS -->
         <label for="fav1">Favorite series:</label>
-        <input type="text" name="fav1" id="fav1">
+        <input type="text" name="fav1" id="fav1" placeholder="Series">
 
         <div id="add-fav2-container" style="display: none;">
             <label><input type="checkbox" id="add-fav2"> Add another series?</label>
@@ -140,7 +145,7 @@
 
         <!-- WISH -->
         <label for="wishlist">What do you feel like watching right now?</label>
-        <textarea name="wishlist" id="wishlist" rows="4" cols="50"></textarea>
+        <textarea name="wishlist" id="wishlist" rows="4" placeholder="Sci-fi adventure about space pirates..."></textarea>
 
         <button type="submit" class="submit-button">Find movies</button>
     </form>

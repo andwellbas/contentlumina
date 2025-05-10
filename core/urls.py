@@ -17,6 +17,8 @@ urlpatterns = [
     path("", views.home_page, name="home"), # Home Page
     path("movies/", views.movie_recommender, name="movie-recommender"), # Movies recommend page
     path("series/", views.series_recommender, name="series-recommender"), # Series recommend page
+    path("anime/", views.anime_recommender, name="anime-recommender"), # Anime recommend page
+    path("games/", views.games_recommender, name="games-recommender"), # Games recommend page
     path("login-required/", TemplateView.as_view(
         template_name="core/login_required.html"), name="login-required"), # Login Check
 ]

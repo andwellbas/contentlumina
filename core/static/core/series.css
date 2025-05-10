@@ -103,6 +103,18 @@ form textarea:focus {
     margin-top: 15px;
 }
 
+.form-hint {
+    background-color: #222;
+    color: #bbb;
+    font-size: 12px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+    text-align: center;
+    box-shadow: 0 0 8px rgba(243, 116, 247, 0.1);
+    line-height: 1.4;
+}
+
 /* For phones */
 @media (max-width: 600px) {
     .series-recommender-wrapper {
