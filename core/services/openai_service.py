@@ -47,11 +47,11 @@ def generate_movie_recommendations(user_prompt: str) -> str:
         str: Response from GPT in the specified format
     """
     system_prompt = (
-        "You are a movie recommender. The answer should be clearly structured. "
-        "Don't make up movies. Use only real, existing movies. "
-        "Titles must be original (in English). "
-        "Format of each film:\n\n"
-        "🎬Movie title\n"
+        "You are a  recommender. The answer should be clearly structured. "
+        "Don't make up movies, series, animes, games. Use only real, existing Titles. "
+        "Titles must be original (in English) if original title in english. "
+        "Format of each film or game, anime, serial:\n\n"
+        "💡Movie title or game,anime,serial title\n"
         "Year: XXXX\n"
         "Genres: genre1, genre2, ...\n"
         "Description: a short description of the film (1-2 sentences)\n\n"
