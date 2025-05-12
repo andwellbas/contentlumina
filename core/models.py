@@ -72,3 +72,47 @@ class SeriesRecommendation(models.Model):
 
     def __str__(self):
         return f"Recommendation for {self.user.username} at {self.created_at.strftime('%Y-%m-%d %H:%M')}"
+
+
+class AnimeRecommendation(models.Model):
+    """
+    A model for storing anime recommendations generated based on a user query.
+
+    Attributes:
+        user (ForeignKey): A link to the user who sent the request.
+        prompt (TextField): Incoming user request or preference (e.g. genres, years, etc.).
+        response (TextField): The system's response with anime recommendations.
+        created_at (DateTimeField): Date and time the recommendation was created.
+
+    Methods:
+        __str__: Returns a string representation of the object.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    prompt = models.TextField()
+    response = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Anime Rec for {self.user.username} at {self.created_at.strftime('%Y-%m-%d %H:%M')}"
+
+
+class GameRecommendation(models.Model):
+    """
+        A model for storing games recommendations generated based on a user query.
+
+        Attributes:
+            user (ForeignKey): A link to the user who sent the request.
+            prompt (TextField): Incoming user request or preference (e.g. genres, years, etc.).
+            response (TextField): The system's response with anime recommendations.
+            created_at (DateTimeField): Date and time the recommendation was created.
+
+        Methods:
+            __str__: Returns a string representation of the object.
+        """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    prompt = models.TextField()
+    response = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Game Rec for {self.user.username} at {self.created_at.strftime('%Y-%m-%d %H:%M')}"

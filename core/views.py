@@ -4,7 +4,7 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from .serializers import GeneratedContentSerializer
-from .models import Prompt, GeneratedContent, MovieRecommendation, SeriesRecommendation
+from .models import Prompt, GeneratedContent, MovieRecommendation, SeriesRecommendation, AnimeRecommendation, GameRecommendation
 from .services.openai_service import generate_text, generate_movie_recommendations
 from django.utils import timezone
 from django.shortcuts import render, redirect
@@ -415,13 +415,19 @@ def profile_view(request):
     user = request.user
     movie_recs = MovieRecommendation.objects.filter(user=user).order_by("-created_at")
     series_recs = SeriesRecommendation.objects.filter(user=user).order_by("-created_at")
+    anime_recs = AnimeRecommendation.objects.filter(user=user).order_by("-created_at")
+    games_recs = GameRecommendation.objects.filter(user=user).order_by("-created_at")
 
     context = {
         "user": user,
         "movie_recs": movie_recs,
         "series_recs": series_recs,
+        "anime_recs": anime_recs,
+        "games_recs": games_recs,
         "movie_count": movie_recs.count(),
         "series_count": series_recs.count(),
+        "anime_count": anime_recs.count(),
+        "games_count": games_recs.count(),
     }
 
     return render(request, "core/profile.html", context)
@@ -430,14 +436,122 @@ def profile_view(request):
 @login_required
 def anime_recommender(request):
     """
-    anime recommender page.
+    View for generating anime recommendations via OpenAI.
+    Gets data from the form, builds a prompt,
+    returns a response to the user.
     """
-    return render(request, "core/anime_recommender.html")
+    context = {}
+
+    # Getting data from a form
+    if request.method == "POST":
+        genre1 = request.POST.get("genre1")
+        genre2 = request.POST.get("genre2")
+        year_from = request.POST.get("year_from")
+        year_to = request.POST.get("year_to")
+        fav1 = request.POST.get("fav1")
+        fav2 = request.POST.get("fav2")
+        fav3 = request.POST.get("fav3")
+        wishlist = request.POST.get("wishlist")
+
+        # Building a prompt
+        user_prompt_parts = []
+
+        if genre1:
+            user_prompt_parts.append(f"Genre: {genre1}")
+        if genre2:
+            user_prompt_parts.append(f"Second genre: {genre2}")
+        if year_from or year_to:
+            user_prompt_parts.append(f"Year: from {year_from or 'any'} to {year_to or 'present'}")
+        favs = [f for f in [fav1, fav2, fav3] if f]
+        if favs:
+            user_prompt_parts.append(f"I like this anime: {', '.join(favs)}")
+        if wishlist:
+            user_prompt_parts.append(f"I'm currently in the mood for something like: {wishlist}")
+
+        user_prompt = "\n".join(user_prompt_parts)
+
+        # Full prompt for GPT
+        gpt_prompt = (
+            "Recommend 3 real anime titles in the format:\n"
+            "Title\nYear: XXXX\nGenres: genre1, genre2, ...\n"
+            "Description: short description (1-2 sentences)\n"
+            "Use only real, existing anime. Titles in English.\n\n" +
+            user_prompt
+        )
+
+        gpt_response = generate_movie_recommendations(gpt_prompt)
+
+        context["prompt"] = user_prompt
+        context["result"] = gpt_response
+        context["submitted"] = True
+
+        # Save prompt and response to db
+        AnimeRecommendation.objects.create(
+            user=request.user,
+            prompt=user_prompt,
+            response=gpt_response
+        )
+
+    return render(request, "core/anime_recommender.html", context)
 
 
 @login_required
 def games_recommender(request):
     """
-    games recommender page.
+    View for generating movie recommendations via OpenAI.
+    Gets data from the form, builds a prompt,
+    returns a response to the user.
     """
-    return render(request, "core/games_recommender.html")
+    context = {}
+
+    # Getting data from a form
+    if request.method == "POST":
+        genre1 = request.POST.get("genre1")
+        genre2 = request.POST.get("genre2")
+        year_from = request.POST.get("year_from")
+        year_to = request.POST.get("year_to")
+        fav1 = request.POST.get("fav1")
+        fav2 = request.POST.get("fav2")
+        fav3 = request.POST.get("fav3")
+        wishlist = request.POST.get("wishlist")
+
+        # Building a prompt
+        user_prompt_parts = []
+
+        if genre1:
+            user_prompt_parts.append(f"Genre: {genre1}")
+        if genre2:
+            user_prompt_parts.append(f"Second genre: {genre2}")
+        if year_from or year_to:
+            user_prompt_parts.append(f"Year: from {year_from or 'any'} to {year_to or 'present'}")
+        favs = [f for f in [fav1, fav2, fav3] if f]
+        if favs:
+            user_prompt_parts.append(f"I like these games: {', '.join(favs)}")
+        if wishlist:
+            user_prompt_parts.append(f"I'm currently in the mood for something like: {wishlist}")
+
+        user_prompt = "\n".join(user_prompt_parts)
+
+        # Full prompt for GPT
+        gpt_prompt = (
+            "Recommend 3 real video games in the format:\n"
+            "Title\nYear: XXXX\nGenres: genre1, genre2, ...\n"
+            "Description: short description (1-2 sentences)\n"
+            "Use only real, existing video games. Titles in English.\n\n" +
+            user_prompt
+        )
+
+        gpt_response = generate_movie_recommendations(gpt_prompt)
+
+        context["prompt"] = user_prompt
+        context["result"] = gpt_response
+        context["submitted"] = True
+
+        # Save prompt and response to db
+        GameRecommendation.objects.create(
+            user=request.user,
+            prompt=user_prompt,
+            response=gpt_response
+        )
+
+    return render(request, "core/games_recommender.html", context)

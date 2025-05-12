@@ -16,10 +16,10 @@
     Leave everything empty for random recommendations.
     </p>
 
-<!-- FORM -->
-<div id="form-section" {% if result %}style="display: none;"{% endif %}>
-    <form method="post">
-        {% csrf_token %}
+    <!-- FORM -->
+    <div id="form-section" {% if result %}style="display: none;"{% endif %}>
+        <form method="post">
+            {% csrf_token %}
 
         <!-- GENRE -->
         <label for="genre1">Genre:</label>

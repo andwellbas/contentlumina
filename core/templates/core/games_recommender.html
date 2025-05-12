@@ -1,7 +1,161 @@
 {% extends "core/base.html" %}
+{% load static %}
 
-{% block title %}Games{% endblock %}
+{% block title %}Game Recommender{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'core/movie.css' %}">
+{% endblock %}
 
 {% block body %}
-    <h1>Games page will be ready soon</h1>
+<div class="movie-recommender-wrapper">
+    <h1 class="form-title">🎮 Game Recommender</h1>
+
+    <p class="form-hint">
+        ℹ️ All fields are optional. The more you enter — the more accurate the results.<br>
+        Leave everything empty for random recommendations.
+    </p>
+
+    <!-- FORM -->
+    <div id="form-section" class="movie-form-section" {% if result %}style="display: none;"{% endif %}>
+        <form method="post" class="movie-form">
+            {% csrf_token %}
+
+            <!-- GENRE -->
+            <label for="genre1">Genre:</label>
+            <select name="genre1" id="genre1">
+                <option value="">Choose a genre</option>
+                <option>Action</option>
+                <option>Adventure</option>
+                <option>RPG</option>
+                <option>Strategy</option>
+                <option>Simulation</option>
+                <option>Horror</option>
+                <option>Platformer</option>
+                <option>Puzzle</option>
+                <option>FPS</option>
+                <option>MMO</option>
+                <option>Fighting</option>
+                <option>Survival</option>
+                <option>Stealth</option>
+                <option>Visual Novel</option>
+                <option>Sports</option>
+                <option>Racing</option>
+            </select>
+
+            <div id="add-genre2-container" class="toggle-container" style="display: none;">
+                <label><input type="checkbox" id="add-genre2"> Add another genre?</label>
+            </div>
+
+            <div id="genre2-container" class="extra-input" style="display: none;">
+                <label for="genre2">Genre 2:</label>
+                <select name="genre2" id="genre2">
+                    <option value="">Choose a genre</option>
+                    <option>Action</option>
+                    <option>Adventure</option>
+                    <option>RPG</option>
+                    <option>Strategy</option>
+                    <option>Simulation</option>
+                    <option>Horror</option>
+                    <option>Platformer</option>
+                    <option>Puzzle</option>
+                    <option>FPS</option>
+                    <option>MMO</option>
+                    <option>Fighting</option>
+                    <option>Survival</option>
+                    <option>Stealth</option>
+                    <option>Visual Novel</option>
+                    <option>Sports</option>
+                    <option>Racing</option>
+                </select>
+            </div>
+
+            <!-- YEARS -->
+            <label>Years of release:</label>
+            <div class="years-row">
+                <input type="number" name="year_from" placeholder="From" min="1980" max="2099">
+                <input type="number" name="year_to" placeholder="To" min="1980" max="2099">
+            </div>
+
+            <!-- FAVORITE GAMES -->
+            <label for="fav1">Favorite game:</label>
+            <input type="text" name="fav1" id="fav1" placeholder="Game">
+
+            <div id="add-fav2-container" class="toggle-container" style="display: none;">
+                <label><input type="checkbox" id="add-fav2"> Add another game?</label>
+            </div>
+
+            <div id="fav2-container" class="extra-input" style="display: none;">
+                <input type="text" name="fav2" id="fav2" placeholder="Game 2">
+            </div>
+
+            <div id="add-fav3-container" class="toggle-container" style="display: none;">
+                <label><input type="checkbox" id="add-fav3"> Add another game?</label>
+            </div>
+
+            <div id="fav3-container" class="extra-input" style="display: none;">
+                <input type="text" name="fav3" placeholder="Game 3">
+            </div>
+
+            <!-- WISH -->
+            <label for="wishlist">What do you feel like playing right now?</label>
+            <textarea name="wishlist" id="wishlist" rows="4" placeholder="Dark RPG with open world and mystery..."></textarea>
+
+            <button type="submit" class="submit-button">Find games</button>
+        </form>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result-section" {% if not result %}style="display: none;"{% endif %}>
+        {% if result %}
+            <h3>Recommended games:</h3>
+            <p>{{ result|linebreaks }}</p>
+            <button onclick="tryAgain()" class="try-again-button">🔁 Try again</button>
+        {% endif %}
+
+        {% if error %}
+            <h3 style="color: red;">❌ {{ error }}</h3>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function tryAgain() {
+        document.getElementById('form-section').style.display = 'block';
+        document.getElementById('result-section').style.display = 'none';
+    }
+</script>
+
+<script>
+    document.getElementById('genre1').addEventListener('change', function () {
+        document.getElementById('add-genre2-container').style.display = this.value !== "" ? 'block' : 'none';
+        if (this.value === "") {
+            document.getElementById('genre2-container').style.display = 'none';
+            document.getElementById('add-genre2').checked = false;
+        }
+    });
+    document.getElementById('add-genre2').addEventListener('change', function () {
+        document.getElementById('genre2-container').style.display = this.checked ? 'block' : 'none';
+    });
+    document.getElementById('fav1').addEventListener('input', function () {
+        document.getElementById('add-fav2-container').style.display = this.value.trim() !== "" ? 'block' : 'none';
+        if (this.value.trim() === "") {
+            document.getElementById('fav2-container').style.display = 'none';
+            document.getElementById('add-fav2').checked = false;
+        }
+    });
+    document.getElementById('add-fav2').addEventListener('change', function () {
+        document.getElementById('fav2-container').style.display = this.checked ? 'block' : 'none';
+    });
+    document.getElementById('fav2').addEventListener('input', function () {
+        document.getElementById('add-fav3-container').style.display = this.value.trim() !== "" ? 'block' : 'none';
+        if (this.value.trim() === "") {
+            document.getElementById('fav3-container').style.display = 'none';
+            document.getElementById('add-fav3').checked = false;
+        }
+    });
+    document.getElementById('add-fav3').addEventListener('change', function () {
+        document.getElementById('fav3-container').style.display = this.checked ? 'block' : 'none';
+    });
+</script>
 {% endblock %}

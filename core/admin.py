@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Prompt, GeneratedContent, MovieRecommendation, SeriesRecommendation
+from .models import Prompt, GeneratedContent, MovieRecommendation, SeriesRecommendation, AnimeRecommendation, GameRecommendation
 
 
 @admin.register(Prompt)
@@ -21,4 +21,13 @@ class MovieRecommendationAdmin(admin.ModelAdmin):
 
 @admin.register(SeriesRecommendation)
 class SeriesRecommendationAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "created_at")
+
+@admin.register(AnimeRecommendation)
+class AnimeRecommendationAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "created_at")
+
+
+@admin.register(GameRecommendation)
+class GameRecommendationAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "created_at")

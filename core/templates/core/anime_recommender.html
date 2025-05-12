@@ -1,7 +1,163 @@
 {% extends "core/base.html" %}
+{% load static %}
 
-{% block title %}ANIME{% endblock %}
+{% block title %}Anime Recommender{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'core/movie.css' %}">
+{% endblock %}
 
 {% block body %}
-    <h1>Anime page will be ready soon</h1>
+<div class="movie-recommender-wrapper">
+    <h1 class="form-title">🍥 Anime Recommender</h1>
+
+    <p class="form-hint">
+        ℹ️ All fields are optional. The more you enter — the more accurate the results.<br>
+        Leave everything empty for random recommendations.
+    </p>
+
+    <!-- FORM -->
+    <div id="form-section" class="movie-form-section" {% if result %}style="display: none;"{% endif %}>
+        <form method="post" class="movie-form">
+            {% csrf_token %}
+
+            <!-- GENRE -->
+            <label for="genre1">Genre:</label>
+            <select name="genre1" id="genre1">
+                <option value="">Choose a genre</option>
+                <option>Action</option>
+                <option>Adventure</option>
+                <option>Comedy</option>
+                <option>Drama</option>
+                <option>Fantasy</option>
+                <option>Horror</option>
+                <option>Isekai</option>
+                <option>Mecha</option>
+                <option>Mystery</option>
+                <option>Psychological</option>
+                <option>Romance</option>
+                <option>School</option>
+                <option>Shounen</option>
+                <option>Slice of Life</option>
+                <option>Sports</option>
+                <option>Supernatural</option>
+                <option>Thriller</option>
+            </select>
+
+            <div id="add-genre2-container" class="toggle-container" style="display: none;">
+                <label><input type="checkbox" id="add-genre2"> Add an additional genre?</label>
+            </div>
+
+            <div id="genre2-container" class="extra-input" style="display: none;">
+                <label for="genre2">Genre 2:</label>
+                <select name="genre2" id="genre2">
+                    <option value="">Choose a genre</option>
+                    <option>Action</option>
+                    <option>Adventure</option>
+                    <option>Comedy</option>
+                    <option>Drama</option>
+                    <option>Fantasy</option>
+                    <option>Horror</option>
+                    <option>Isekai</option>
+                    <option>Mecha</option>
+                    <option>Mystery</option>
+                    <option>Psychological</option>
+                    <option>Romance</option>
+                    <option>School</option>
+                    <option>Shounen</option>
+                    <option>Slice of Life</option>
+                    <option>Sports</option>
+                    <option>Supernatural</option>
+                    <option>Thriller</option>
+                </select>
+            </div>
+
+            <!-- YEARS -->
+            <label>Years of release:</label>
+            <div class="years-row">
+                <input type="number" name="year_from" placeholder="From" min="1900" max="2099">
+                <input type="number" name="year_to" placeholder="To" min="1900" max="2099">
+            </div>
+
+            <!-- FAVORITE ANIME -->
+            <label for="fav1">Favorite anime:</label>
+            <input type="text" name="fav1" id="fav1" placeholder="Anime">
+
+            <div id="add-fav2-container" class="toggle-container" style="display: none;">
+                <label><input type="checkbox" id="add-fav2"> Add another anime?</label>
+            </div>
+
+            <div id="fav2-container" class="extra-input" style="display: none;">
+                <input type="text" name="fav2" id="fav2" placeholder="Anime 2">
+            </div>
+
+            <div id="add-fav3-container" class="toggle-container" style="display: none;">
+                <label><input type="checkbox" id="add-fav3"> Add another anime?</label>
+            </div>
+
+            <div id="fav3-container" class="extra-input" style="display: none;">
+                <input type="text" name="fav3" placeholder="Anime 3">
+            </div>
+
+            <!-- WISH -->
+            <label for="wishlist">What do you feel like watching right now?</label>
+            <textarea name="wishlist" id="wishlist" rows="4" placeholder="Romantic school life with mystery..."></textarea>
+
+            <button type="submit" class="submit-button">Find anime</button>
+        </form>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result-section" {% if not result %}style="display: none;"{% endif %}>
+        {% if result %}
+            <h3>Recommended anime:</h3>
+            <p>{{ result|linebreaks }}</p>
+            <button onclick="tryAgain()" class="try-again-button">🔁 Try again</button>
+        {% endif %}
+
+        {% if error %}
+            <h3 style="color: red;">❌ {{ error }}</h3>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function tryAgain() {
+        document.getElementById('form-section').style.display = 'block';
+        document.getElementById('result-section').style.display = 'none';
+    }
+</script>
+
+<script>
+    document.getElementById('genre1').addEventListener('change', function () {
+        document.getElementById('add-genre2-container').style.display = this.value !== "" ? 'block' : 'none';
+        if (this.value === "") {
+            document.getElementById('genre2-container').style.display = 'none';
+            document.getElementById('add-genre2').checked = false;
+        }
+    });
+    document.getElementById('add-genre2').addEventListener('change', function () {
+        document.getElementById('genre2-container').style.display = this.checked ? 'block' : 'none';
+    });
+    document.getElementById('fav1').addEventListener('input', function () {
+        document.getElementById('add-fav2-container').style.display = this.value.trim() !== "" ? 'block' : 'none';
+        if (this.value.trim() === "") {
+            document.getElementById('fav2-container').style.display = 'none';
+            document.getElementById('add-fav2').checked = false;
+        }
+    });
+    document.getElementById('add-fav2').addEventListener('change', function () {
+        document.getElementById('fav2-container').style.display = this.checked ? 'block' : 'none';
+    });
+    document.getElementById('fav2').addEventListener('input', function () {
+        document.getElementById('add-fav3-container').style.display = this.value.trim() !== "" ? 'block' : 'none';
+        if (this.value.trim() === "") {
+            document.getElementById('fav3-container').style.display = 'none';
+            document.getElementById('add-fav3').checked = false;
+        }
+    });
+    document.getElementById('add-fav3').addEventListener('change', function () {
+        document.getElementById('fav3-container').style.display = this.checked ? 'block' : 'none';
+    });
+</script>
 {% endblock %}
