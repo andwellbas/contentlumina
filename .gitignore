@@ -22,6 +22,9 @@ db.sqlite3
 # Environment variables
 *.env
 
+# Static Files
+/staticfiles/
+
 # OS files
 .DS_Store
 Thumbs.db
