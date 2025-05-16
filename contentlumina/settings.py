@@ -182,3 +182,14 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+
+# The service is behind a TLS proxy (Railway / Heroku / Render)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# CSRF for Railway subdomains
+CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]
+
+# Cookies only over https (voluntary, but correct)
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE    = True
