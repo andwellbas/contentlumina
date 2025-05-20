@@ -27,10 +27,11 @@
 }
 
 .hero-buttons {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    flex-wrap: wrap;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .home-button {
@@ -125,5 +126,12 @@
     }
     .feature {
         width: 90%;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .hero-buttons {
+        grid-template-columns: 1fr;
     }
 }
