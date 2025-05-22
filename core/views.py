@@ -125,17 +125,20 @@ def register_page(request):
         # Checking that all fields are filled in
         if not username or not email or not password:
             return render(request, "core/register.html", {
-                "error": "All fields are required.."
+                "error": "All fields are required..",
+                "RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY
             })
 
         # Checking uniqueness
         if User.objects.filter(username=username).exists():
             return render(request, "core/register.html", {
-                "error": "This username is already taken"
+                "error": "This username is already taken",
+                "RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY
             })
         elif User.objects.filter(email=email).exists():
             return render(request, "core/register.html", {
-                "error": "This email is already registered"
+                "error": "This email is already registered",
+                "RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY
             })
 
         # Create code for email
@@ -240,7 +243,8 @@ def login_page(request):
             login(request, user)
             return redirect("home")
         else:
-            return render(request, "core/login.html", {"error": "Incorrect login or password"})
+            return render(request, "core/login.html", {"error": "Incorrect login or password",
+                "RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY})
 
     return render(request, "core/login.html", {"RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY})
 
