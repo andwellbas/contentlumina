@@ -116,22 +116,36 @@
     box-shadow: 0 0 8px #f374f7;
 }
 
-/* For phones */
+/* Mobile Optimized */
 @media (max-width: 600px) {
+    .hero {
+        padding: 60px 10px;
+    }
+    .hero-logo {
+        width: 120px;
+    }
     .hero-title {
         font-size: 26px;
+        margin-bottom: 8px;
     }
     .hero-subtitle {
-        font-size: 16px;
+        font-size: 15px;
+        margin-bottom: 24px;
+    }
+    .hero-buttons {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+        padding: 0 10px;
+    }
+    .home-button {
+        font-size: 14px;
+        padding: 12px 18px;
     }
     .feature {
         width: 90%;
     }
-}
-
-
-@media (max-width: 600px) {
-    .hero-buttons {
-        grid-template-columns: 1fr;
+    .chat-bubble {
+        font-size: 14px;
+        max-width: 95%;
     }
 }
