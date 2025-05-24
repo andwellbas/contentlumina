@@ -11,10 +11,12 @@
 <div class="series-recommender-wrapper">
     <h1 class="form-title">📺 Series Recommender</h1>
 
-    <p class="form-hint">
-    ℹ️ All fields are optional. The more you enter — the more accurate the results.<br>
-    Leave everything empty for random recommendations.
-    </p>
+    {% if not result %}
+        <p class="form-hint">
+        ℹ️ All fields are optional. The more you enter — the more accurate the results.<br>
+        Leave everything empty for random recommendations.
+        </p>
+    {% endif %}
 
     <!-- FORM -->
     <div id="form-section" {% if result %}style="display: none;"{% endif %}>
