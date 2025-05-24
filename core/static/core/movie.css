@@ -118,20 +118,39 @@
 /* For phones */
 @media (max-width: 600px) {
     .movie-recommender-wrapper {
-        padding: 20px;
+        padding: 20px 16px;
         margin: 20px;
-    }
-
-    .years-row {
-        flex-direction: column;
-    }
-
-    .submit-button {
-        font-size: 15px;
     }
 
     .form-title {
         font-size: 20px;
+    }
+
+    .movie-form input[type="text"],
+    .movie-form input[type="number"],
+    .movie-form select,
+    .movie-form textarea {
+        font-size: 14px;
+    }
+
+    .years-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .submit-button {
+        font-size: 15px;
+        padding: 12px;
+    }
+
+    .form-hint {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+
+    .result-box {
+        font-size: 14px;
+        padding: 16px;
     }
 }
 
